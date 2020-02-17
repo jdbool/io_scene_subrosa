@@ -11,9 +11,10 @@ def load_mesh(context, name, vertices, faces, vertex_uvs):
         faces
     )
 
-    mesh.uv_layers.new(do_init=False)
-    mesh.uv_layers[-1].data.foreach_set('uv', [uv for pair in [
-        vertex_uvs[l.vertex_index] for l in mesh.loops] for uv in pair])
+    if vertex_uvs:
+        mesh.uv_layers.new(do_init=False)
+        mesh.uv_layers[-1].data.foreach_set('uv', [uv for pair in [
+            vertex_uvs[l.vertex_index] for l in mesh.loops] for uv in pair])
 
     bm = bmesh.new()
     bm.from_mesh(mesh)
