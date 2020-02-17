@@ -34,15 +34,35 @@ class ImportCMO(bpy.types.Operator, ImportHelper):
         return import_cmo.load(context, **keywords)
 
 
+class ImportCMC(bpy.types.Operator, ImportHelper):
+    """Load a Sub Rosa Character File"""
+    bl_idname = 'import_scene.cmc'
+    bl_label = 'Import CMC'
+    bl_options = {'UNDO'}
+
+    filename_ext = '.cmo'
+    filter_glob = StringProperty(
+        default='*.cmc',
+        options={'HIDDEN'}
+    )
+
+    def execute(self, context):
+        from . import import_cmc
+
+        keywords = self.as_keywords(ignore=('filter_glob',))
+        return import_cmc.load(context, **keywords)
+
+
 def menu_func_import(self, context):
     self.layout.operator(ImportCMO.bl_idname, text="Sub Rosa Object (.cmo)")
+    self.layout.operator(ImportCMC.bl_idname, text="Sub Rosa Character (.cmc)")
 
 
 # def menu_func_export(self, context):
 #     self.layout.operator(ImportCMO.bl_idname, text="Wavefront (.obj)")
 
 
-classes = (ImportCMO,)
+classes = (ImportCMO, ImportCMC)
 
 
 def register():
