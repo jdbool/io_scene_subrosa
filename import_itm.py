@@ -1,3 +1,4 @@
+import bpy
 from struct import unpack
 from . import shared
 
@@ -33,6 +34,7 @@ def load(context, filepath):
             vertex_indices.reverse()
             faces.append(tuple(vertex_indices))
         
-        shared.load_mesh(context, filepath, vertices, faces, vertex_uvs)
+        name = bpy.path.display_name_from_filepath(filepath)
+        shared.load_mesh(context, name, vertices, faces, vertex_uvs)
     
     return {'FINISHED'}

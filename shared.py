@@ -3,9 +3,7 @@ import bmesh
 from math import pi
 
 
-def load_mesh(context, filepath, vertices, faces, vertex_uvs):
-    name = bpy.path.display_name_from_filepath(filepath)
-
+def load_mesh(context, name, vertices, faces, vertex_uvs):
     mesh = bpy.data.meshes.new(name)
     mesh.from_pydata(
         vertices,
