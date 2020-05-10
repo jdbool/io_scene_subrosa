@@ -5,7 +5,7 @@ from . import shared
 
 def load(context, filepath):
     with open(filepath, 'rb') as f:
-        f.read(4) # Magic number
+        f.read(4)  # Magic number
 
         (version,) = unpack('<i', f.read(4))
         assert version == 2, 'Unknown file version.'
@@ -28,8 +28,8 @@ def load(context, filepath):
             vertex_indices = unpack('<iii', f.read(4 * 3))
             # Indices are reversed for correct normals
             faces.append(vertex_indices[::-1])
-        
+
         name = bpy.path.display_name_from_filepath(filepath)
         shared.load_mesh(context, name, vertices, faces, vertex_uvs)
-    
+
     return {'FINISHED'}
