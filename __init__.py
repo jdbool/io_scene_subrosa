@@ -12,7 +12,7 @@ bl_info = {
 
 import bpy
 from bpy.props import StringProperty
-from bpy_extras.io_utils import ImportHelper
+from bpy_extras.io_utils import ImportHelper, ExportHelper
 
 
 class ImportCMO(bpy.types.Operator, ImportHelper):
@@ -92,17 +92,35 @@ class ImportSBV(bpy.types.Operator, ImportHelper):
 
 
 def menu_func_import(self, context):
-    self.layout.operator(ImportCMO.bl_idname, text="Sub Rosa Object (.cmo)")
-    self.layout.operator(ImportCMC.bl_idname, text="Sub Rosa Character (.cmc)")
-    self.layout.operator(ImportITM.bl_idname, text="Sub Rosa Item (.itm)")
-    self.layout.operator(ImportSBV.bl_idname, text="Sub Rosa Vehicle (.sbv)")
+    self.layout.operator(ImportCMO.bl_idname, text='Sub Rosa Object (.cmo)')
+    self.layout.operator(ImportCMC.bl_idname, text='Sub Rosa Character (.cmc)')
+    self.layout.operator(ImportITM.bl_idname, text='Sub Rosa Item (.itm)')
+    self.layout.operator(ImportSBV.bl_idname, text='Sub Rosa Vehicle (.sbv)')
 
 
-# def menu_func_export(self, context):
-#     self.layout.operator(ImportCMO.bl_idname, text="Wavefront (.obj)")
+class ExportCMO(bpy.types.Operator, ExportHelper):
+    """Load a Sub Rosa Object File"""
+    bl_idname = 'export_scene.cmo'
+    bl_label = 'Export CMO'
+
+    filename_ext = '.cmo'
+    filter_glob = StringProperty(
+        default='*.cmo',
+        options={'HIDDEN'}
+    )
+
+    def execute(self, context):
+        from . import export_cmo
+
+        keywords = self.as_keywords(ignore=('filter_glob', 'check_existing'))
+        return export_cmo.save(context, **keywords)
 
 
-classes = (ImportCMO, ImportCMC, ImportITM, ImportSBV)
+def menu_func_export(self, context):
+    self.layout.operator(ExportCMO.bl_idname, text='Sub Rosa Object (.cmo)')
+
+
+classes = (ImportCMO, ImportCMC, ImportITM, ImportSBV, ExportCMO)
 
 
 def register():
@@ -110,10 +128,12 @@ def register():
         bpy.utils.register_class(cls)
 
     bpy.types.TOPBAR_MT_file_import.append(menu_func_import)
+    bpy.types.TOPBAR_MT_file_export.append(menu_func_export)
 
 
 def unregister():
     bpy.types.TOPBAR_MT_file_import.remove(menu_func_import)
+    bpy.types.TOPBAR_MT_file_export.remove(menu_func_export)
 
     for cls in classes:
         bpy.utils.unregister_class(cls)
