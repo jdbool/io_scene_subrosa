@@ -30,11 +30,11 @@ def load(context, filepath):
             for _ in range(num_vertices):
                 (vertex_id,) = unpack('<i', f.read(4))
                 vertex_indices.append(vertex_id)
-            
+
             vertex_indices.reverse()
             faces.append(tuple(vertex_indices))
-        
+
         name = bpy.path.display_name_from_filepath(filepath)
         shared.load_mesh(context, name, vertices, faces, vertex_uvs)
-    
+
     return {'FINISHED'}
